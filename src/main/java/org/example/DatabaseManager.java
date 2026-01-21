@@ -15,17 +15,20 @@ public class DatabaseManager {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
-    // Institution қосу
-    public static void addInstitution(String name) {
-        String sql = "INSERT INTO institution(name) VALUES(?)";
+    public static void addInstitution(String name, String address, int year) {
+        String sql = "INSERT INTO institution(name, address, established_year) VALUES(?, ?, ?)";
+
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, name);
-            pstmt.executeUpdate();
-            System.out.println("Institution added!");
-        } catch (SQLException e) { System.out.println("Institution қатесі: " + e.getMessage()); }
-    }
+            pstmt.setString(2, address);
+            pstmt.setInt(3, year);
 
-    // Teacher қосу
+            pstmt.executeUpdate();
+            System.out.println("Institution added successfully!");
+        } catch (SQLException e) {
+            System.out.println("Error teacher: " + e.getMessage());
+        }
+    }
     public static void addTeacher(String name, String subject) {
         String sql = "INSERT INTO teacher(full_name, subject) VALUES(?, ?)";
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -33,10 +36,8 @@ public class DatabaseManager {
             pstmt.setString(2, subject);
             pstmt.executeUpdate();
             System.out.println("Teacher added");
-        } catch (SQLException e) { System.out.println("Teacher қатесі: " + e.getMessage()); }
+        } catch (SQLException e) { System.out.println("Teacher: " + e.getMessage()); }
     }
-
-    // Student қосу
     public static void addStudent(String fName, String lName, int age, int instId) {
         String sql = "INSERT INTO student(first_name, last_name, age, institution_id) VALUES(?, ?, ?, ?)";
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -46,6 +47,6 @@ public class DatabaseManager {
             pstmt.setInt(4, instId);
             pstmt.executeUpdate();
             System.out.println("Student added!");
-        } catch (SQLException e) { System.out.println("Student қатесі: " + e.getMessage()); }
+        } catch (SQLException e) { System.out.println("Student: " + e.getMessage()); }
     }
 }
